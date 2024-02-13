@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../Porviders/AuthProvider";
 
 function Login() {
+  const { signIn } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,11 +27,19 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formData;
-    console.log(email, password);
-    setFormData({
-      email: "",
-      password: "",
-    });
+
+    signIn(email, password)
+      .then((result) => {
+        const loggedUser = result.user;
+        setFormData({
+          email: "",
+          password: "",
+        });
+        console.log(loggedUser);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -100,13 +111,21 @@ function Login() {
                 Log in
               </button>
 
-              <div className="text-blue-600 hover:text-blue-400 mt-2 flex text-base font-semibold hover:underline ">
-                <Link to="/forgot">Forgotten password?</Link>
+              <div className="grid grid-cols-2">
+                <Link
+                  className="text-blue-600 hover:text-blue-400 mt-2 flex text-base font-semibold hover:underline  "
+                  to="/forgot"
+                >
+                  Forgotten password?
+                </Link>
               </div>
 
               <div className="text-black text-center flex items-center justify-center mt-2">
                 <h1 className="text-base font-medium">New to Ema-Jhon?</h1>
-                <Link to="/signup" className="text-red-800 font-semibold ml-2 hover:text-blue-400">
+                <Link
+                  to="/signup"
+                  className="text-red-800 font-semibold ml-2 hover:text-blue-400"
+                >
                   Sign up
                 </Link>
               </div>

@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../Porviders/AuthProvider";
 
 function SignUpPage() {
+  const { createUser } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -10,7 +13,7 @@ function SignUpPage() {
     password: "",
     confirmPassword: "",
   });
-
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
@@ -38,20 +41,29 @@ function SignUpPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { firstName, lastName, email, password, confirmPassword } = formData;
+
+    setError("");
     if (password !== confirmPassword) {
-      alert("Confirm Password do not match");
+      setError("Confirm Password do not match!!");
       return;
     }
-    console.log(firstName, lastName, email, password, confirmPassword);
 
-    console.log(typeof email);
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+    createUser(email, password)
+      .then((result) => {
+        const loggedUser = result.user;
+        console.log(loggedUser);
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        setError(error.message);
+      });
   };
 
   return (
@@ -160,9 +172,10 @@ function SignUpPage() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 flex items-center"
               >
                 Confirm Password
+                <small className="text-red-800 ml-8">{error}</small>
               </label>
               <div className="relative">
                 <input
@@ -185,7 +198,7 @@ function SignUpPage() {
               </div>
               {!passwordsMatch && (
                 <p className="text-red-500 text-sm mt-1">
-                  Passwords do not match
+                  Passwords do not match!!
                 </p>
               )}
             </div>
