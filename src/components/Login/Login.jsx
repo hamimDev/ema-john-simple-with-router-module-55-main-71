@@ -1,11 +1,14 @@
 import React, { useContext, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Porviders/AuthProvider";
 
 function Login() {
   const { signIn } = useContext(AuthContext);
-
+  const location = useLocation();
+  const navigate = useNavigate();
+  console.log(location);
+  const from = location.state?.from?.pathname || "/";
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -36,6 +39,7 @@ function Login() {
           password: "",
         });
         console.log(loggedUser);
+        navigate(from, { replace: true });
       })
       .catch((error) => {
         console.error(error);

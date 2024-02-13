@@ -95,9 +95,11 @@ const Header = () => {
         </Link>
 
         {user && (
-          <span>
+          <span className="flex items-center">
             Welcome {user.email}
-            <button onClick={handleSignOut}>Sign out</button>
+            <button className="ml-8" onClick={handleSignOut}>
+              Sign out
+            </button>
           </span>
         )}
       </div>

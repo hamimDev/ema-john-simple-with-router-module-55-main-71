@@ -213,7 +213,7 @@ function SignUpPage() {
 
               <div className="text-black text-center flex items-center justify-center mt-2">
                 <h1 className="text-base font-medium">
-                  Already you have an account?
+                  Already have an account?
                 </h1>
                 <Link
                   to="/login"
